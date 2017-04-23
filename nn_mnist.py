@@ -35,9 +35,9 @@ valid_x, valid_y = valid_set
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
-plt.imshow(train_x[57].reshape((28, 28)), cmap=cm.Greys_r)
-plt.show()  # Let's see a sample
-print train_y[57]
+# plt.imshow(train_x[57].reshape((28, 28)), cmap=cm.Greys_r)
+# plt.show()  # Let's see a sample
+# print train_y[57]
 
 
 
@@ -69,9 +69,9 @@ y = tf.matmul(h, W3) + b3
 
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 evaluacion = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
-accuracy = tf.reduce_mean(tf.cast(evaluacion, tf.float32))
-train = tf.train.GradientDescentOptimizer(0.01).minimize(loss)  # learning rate: 0.01
-
+accuracy = tf.reduce_mean(tf.cast(evaluacion, tf.float32))*100
+train = tf.train.GradientDescentOptimizer(0.5).minimize(loss)  # learning rate: 0.5
+square = tf.reduce_mean(tf.squared_difference(y_,y))
 # init = tf.initialize_all_variables()
 init = tf.global_variables_initializer()
 
@@ -85,7 +85,7 @@ print "----------------------"
 batch_size = 20
 batch_x_valid = valid_x
 batch_y_valid = valid_y
-
+resultados= []
 
 for epoch in xrange(10):
     for jj in xrange(len(train_x) / batch_size):
@@ -95,11 +95,20 @@ for epoch in xrange(10):
     validation_error = sess.run(loss, feed_dict={x: batch_x_valid, y_:batch_y_valid})
 
     print "Epoch #:", epoch, "Error: ", validation_error
-    result = sess.run(y, feed_dict={x: batch_xs})
+    square_error = sess.run(square, feed_dict={x: batch_x_valid , y_: batch_y_valid})
+    accuracy_number = sess.run(accuracy, feed_dict={x: batch_x_valid, y_: batch_y_valid})
+    print square_error, " acu --> ", accuracy_number
+    resultados.append([square_error, accuracy_number])
+
+    # result = sess.run(y, feed_dict={x: batch_xs})
     # for b, r in zip(batch_ys, result):
     #     print b, "-->", r
     # print "----------------------------------------------------------------------------------"
 
-print(accuracy.eval(feed_dict={x: test_x, y_: test_y}))
+
+plt.plot(resultados)
+plt.show()
+
+print(accuracy.eval(feed_dict={x: test_x, y_: test_y}, session=sess))
 
 
