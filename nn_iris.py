@@ -52,8 +52,10 @@ h = tf.nn.sigmoid(tf.matmul(x, W1) + b1)
 y = tf.nn.softmax(tf.matmul(h, W2) + b2)
 
 loss = tf.reduce_sum(tf.square(y_ - y))
-
 train = tf.train.GradientDescentOptimizer(0.001).minimize(loss)  # learning rate: 0.01
+
+evaluation = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))  # Return [true,false] array
+accuracy = tf.reduce_mean(tf.cast(evaluation, tf.float32)) * 100  # Cast true or false to 1 or 0
 
 init = tf.initialize_all_variables()
 
@@ -66,18 +68,15 @@ print "----------------------"
 
 batch_size = 20
 
-batch_x_valid = x_valid
-batch_y_valid = y_valid
-
 for epoch in xrange(1000):
     for jj in xrange(len(x_train) / batch_size):
         batch_xs = x_train[jj * batch_size: jj * batch_size + batch_size]
         batch_ys = y_train[jj * batch_size: jj * batch_size + batch_size]
         sess.run(train, feed_dict={x: batch_xs, y_: batch_ys})
 
-    val_error = sess.run(loss, feed_dict={x: batch_x_valid, y_: batch_y_valid})
-    print "Epoch #:", epoch, "Error: ", sess.run(loss, feed_dict={x: batch_xs, y_: batch_ys})\
-        , "Error de validacion: ", val_error
+    percentage = sess.run(accuracy, feed_dict={x: x_valid, y_: y_valid})
+    print "Epoch #:", epoch, "Error cuadrado: ", sess.run(loss, feed_dict={x: batch_xs, y_: batch_ys})\
+        , "Porcentaje de acierto: ", percentage, "%"
 
     result = sess.run(y, feed_dict={x: batch_xs})
     for b, r in zip(batch_ys, result):
