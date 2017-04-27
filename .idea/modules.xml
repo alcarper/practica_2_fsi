@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/nn_code.iml" filepath="$PROJECT_DIR$/.idea/nn_code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../practica_3_fsi/.idea/practica_3_fsi.iml" filepath="$PROJECT_DIR$/../practica_3_fsi/.idea/practica_3_fsi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../practica_fsi_1/.idea/search_code.iml" filepath="$PROJECT_DIR$/../practica_fsi_1/.idea/search_code.iml" />
     </modules>
   </component>
 </project>
