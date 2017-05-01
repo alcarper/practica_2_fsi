@@ -48,11 +48,10 @@ W2 = tf.Variable(np.float32(np.random.rand(5, 3)) * 0.1)
 b2 = tf.Variable(np.float32(np.random.rand(3)) * 0.1)
 
 h = tf.nn.sigmoid(tf.matmul(x, W1) + b1)
-# h = tf.matmul(x, W1) + b1  # Try this!
 y = tf.nn.softmax(tf.matmul(h, W2) + b2)
 
 loss = tf.reduce_sum(tf.square(y_ - y))
-train = tf.train.GradientDescentOptimizer(0.001).minimize(loss)  # learning rate: 0.01
+train = tf.train.GradientDescentOptimizer(0.01).minimize(loss)  # learning rate: 0.01
 
 evaluation = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))  # Return [true,false] array
 accuracy = tf.reduce_mean(tf.cast(evaluation, tf.float32)) * 100  # Cast true or false to 1 or 0
@@ -82,3 +81,5 @@ for epoch in xrange(1000):
     for b, r in zip(batch_ys, result):
         print b, "-->", r
     print "----------------------------------------------------------------------------------"
+
+print "Acierto con los test ->", sess.run(accuracy, feed_dict={x:x_test, y_:y_test})

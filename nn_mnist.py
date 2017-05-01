@@ -60,7 +60,6 @@ W2 = tf.Variable(np.float32(np.random.rand(100, 10)) * 0.1)
 b2 = tf.Variable(np.float32(np.random.rand(10)) * 0.1)
 
 h = tf.nn.sigmoid(tf.matmul(x, W1) + b1)
-# y = tf.matmul(h, W2) + b2
 y = tf.nn.softmax(tf.matmul(h, W2) + b2)
 
 # loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
@@ -88,6 +87,7 @@ epoch = 0
 # for epoch in xrange(100):
 while (last_error - current_error) > 0.00001:
     last_error = current_error
+    epoch += 1
     for jj in xrange(len(train_x) / batch_size):
         batch_xs = train_x[jj * batch_size: jj * batch_size + batch_size]
         batch_ys = train_y[jj * batch_size: jj * batch_size + batch_size]
