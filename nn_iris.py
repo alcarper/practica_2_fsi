@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 # Translate a list of labels into an array of 0's and one 1.
 # i.e.: 4 -> [0,0,0,0,1,0,0,0,0,0]
@@ -67,19 +67,33 @@ print "----------------------"
 
 batch_size = 20
 
-for epoch in xrange(1000):
+last_error = 100
+current_error = 99
+epoch = 0
+results = []
+
+while (last_error - current_error) > 0.000000001:
+    last_error = current_error
+    epoch += 1
     for jj in xrange(len(x_train) / batch_size):
         batch_xs = x_train[jj * batch_size: jj * batch_size + batch_size]
         batch_ys = y_train[jj * batch_size: jj * batch_size + batch_size]
         sess.run(train, feed_dict={x: batch_xs, y_: batch_ys})
 
+    current_error = sess.run(loss, feed_dict={x: x_valid, y_: y_valid})
+    results.append(current_error)
     percentage = sess.run(accuracy, feed_dict={x: x_valid, y_: y_valid})
     print "Epoch #:", epoch, "Error cuadrado: ", sess.run(loss, feed_dict={x: batch_xs, y_: batch_ys})\
         , "Porcentaje de acierto: ", percentage, "%"
 
-    result = sess.run(y, feed_dict={x: batch_xs})
-    for b, r in zip(batch_ys, result):
-        print b, "-->", r
-    print "----------------------------------------------------------------------------------"
+
+
+    # result = sess.run(y, feed_dict={x: batch_xs})
+    # for b, r in zip(batch_ys, result):
+    #     print b, "-->", r
+    # print "----------------------------------------------------------------------------------"
 
 print "Acierto con los test ->", sess.run(accuracy, feed_dict={x:x_test, y_:y_test})
+
+plt.plot(results)
+plt.show()

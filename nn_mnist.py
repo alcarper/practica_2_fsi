@@ -62,8 +62,9 @@ b2 = tf.Variable(np.float32(np.random.rand(10)) * 0.1)
 h = tf.nn.sigmoid(tf.matmul(x, W1) + b1)
 y = tf.nn.softmax(tf.matmul(h, W2) + b2)
 
-# loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
-loss = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y),reduction_indices=[1]))
+# loss = tf.reduce_sum(tf.square(y_ - y))  # No funciona correctamente
+# loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))  # Aumenta el error cuadrado
+loss = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y),reduction_indices=[1]))  # La mejor encontrada
 train = tf.train.GradientDescentOptimizer(0.5).minimize(loss)  # learning rate: 0.5
 
 evaluation = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))  # Return [true,false] array
